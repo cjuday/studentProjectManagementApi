@@ -16,7 +16,8 @@ class Project extends Model
     protected function casts(): array
     {
         return [
-            'status' => ProjectStatus::class,
+            'status'            => ProjectStatus::class,
+            'repository_link'   => 'array',
         ];
     }
 

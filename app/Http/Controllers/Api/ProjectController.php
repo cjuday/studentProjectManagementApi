@@ -33,11 +33,16 @@ class ProjectController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'repository_link' => 'required|url',
+            'repository_link' => 'required|array|min:1',
+            'repository_link.*' => 'required|string|max:255',
             'demo_link' => 'nullable|url',
-            'file_path' => 'nullable|string',
-            'teacher_id' => 'nullable|exists:users,id',
+            'file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:5120',
+            'teacher_id' => 'required|exists:users,id',
         ]);
+
+        if ($request->hasFile('file_path')) {
+            $data['file_path'] = $request->file('file_path')->store('project-files', 'public');
+        }
 
         $project = $this->projectService->create($data, $request->user());
 
